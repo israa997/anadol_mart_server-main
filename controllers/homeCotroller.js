@@ -10,6 +10,9 @@ const Currency = require("../models/currency");
 const AdvertsmentCard = require("../models/advertisementCard");
 const Marketer = require("../models/marketer");
 const Category = require("../models/category")
+const AnnouncementEmails = require("../models/announcementEmail");
+
+
 const getAllTopSliderImages = asyncHandler(async (req, res, next) => {
     let topSliderImages;
     try {
@@ -934,7 +937,35 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
     res.status(200).json({message:"Deleted successfully"}); 
   });
 
-
+  const getAnnouncementEmails = asyncHandler(async (req, res, next) => {
+    let announceEmail;
+    try {
+      announceEmail = await AnnouncementEmails.findAll();
+    } catch{
+      res.status(500);
+      throw new Error('something went wrong');
+    }
+    res.json(announceEmail);
+  });
+  
+  const postAnnouncementEmails = asyncHandler(async (req, res, next) => {
+    const { email } = req.body;
+  
+    console.log(email)
+  
+    let createdAnnounceEmail;
+  
+    try {
+      createdAnnounceEmail = await AnnouncementEmails.create({
+        email,
+      });
+    } catch (err) {
+      res.status(500);
+      throw new Error(err);
+    }
+  
+    res.json(createdAnnounceEmail);
+  });
 
 exports.getPrivacyPolicy = getPrivacyPolicy;
 exports.getAllTopSliderImages = getAllTopSliderImages;
@@ -980,3 +1011,5 @@ exports.postCategories = postCategories;
 exports.getCategories = getCategories;
 exports.updateCategories = updateCategories;
 exports.deleteCategories = deleteCategories;
+exports.getAnnouncementEmails = getAnnouncementEmails;
+exports.postAnnouncementEmails = postAnnouncementEmails;

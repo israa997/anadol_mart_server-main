@@ -67,5 +67,7 @@ router.post('/addCategories', HomeController.postCategories);
 router.put('/editCategories/:id', HomeController.updateCategories);
 router.delete('/deleteCategories/:id', HomeController.deleteCategories);
 
+router.get('/announce-email', HomeController.getAnnouncementEmails);
+router.post('/postAnnounce-email', HomeController.postAnnouncementEmails);
 
 module.exports = router;
