@@ -9,7 +9,6 @@ router.post('/signup',userController.signup);
 router.get('/',protect, userController.getUserProfile);
 router.put('/updateProfile',protect, userController.updateUserProfile);
 router.post('/pay',protect, userController.makePayment);
-router.put('/updateProfile', protect, userController.updateUserInfo);
 router.post('/addToWishList',protect,userController.addToWishList);
 router.get('/list/',protect,userController.userWishList);
 router.delete('/deletelist/:id', userController.deleteWishList);

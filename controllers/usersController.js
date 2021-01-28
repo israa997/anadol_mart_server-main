@@ -467,7 +467,6 @@ exports.login = login;
 exports.signup = signup;
 exports.getUserProfile = getUserProfile;
 exports.makePayment = makePayment;
-exports.updateUserInfo = updateUserInfo;
 exports.addToWishList = addToWishList;
 exports.userWishList = userWishList;
 exports.deleteWishList = deleteWishList;
