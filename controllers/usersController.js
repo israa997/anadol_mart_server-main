@@ -164,10 +164,46 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 
 
-const updateUserInfo = asyncHandler(async (req, res, next) => {
-  const { name, email, phone_number, password } = req.body;
-  console.log('req.body',req.body)
-})
+const updateUserProfile = asyncHandler(async (req, res) => {
+  console.log("req.body", req.body);
+     let updateUser;
+     try{
+     updateUser = await User.update({
+        name:  req.body.name ?  req.body.name: req.user.name,
+        email:  req.body.email? req.body.email: req.user.email,
+        phone_number:  req.body.phone_number? req.body.phone_number: req.user.phone_number,
+        password: req.body.password? await bcrypt.hash( req.body.password, 12) : req.user.password
+
+     }, {
+         where: {
+          id : req.user.id
+         }
+       });
+       console.log("update user",updateUser)
+       let token;
+      try {
+        token = jwt.sign(
+          { userId: updateUser.id, name: updateUser.name, email: updateUser.email },
+          'supersecret_dont_share',
+          { expiresIn: '9h' }
+        );
+      } catch (err) {
+        res.status(500);
+        throw new Error('token failed');
+      } 
+       return res.json({
+    id : updateUser.id,
+    name: updateUser.name,
+    email: updateUser.email,
+    phone_number: updateUser.phone_number,
+    password: updateUser.password,
+    token: token,
+  });
+  }catch(err){
+    res.status(500);
+    throw new Error('failed to update');
+  }
+});
 
 const makePayment = asyncHandler(async (req, res) => {
   const {
@@ -435,3 +471,4 @@ exports.updateUserInfo = updateUserInfo;
 exports.addToWishList = addToWishList;
 exports.userWishList = userWishList;
 exports.deleteWishList = deleteWishList;
+exports.updateUserProfile = updateUserProfile;
