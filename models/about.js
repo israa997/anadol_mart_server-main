@@ -8,14 +8,39 @@ const Banner = sequelize.define('about', {
         primaryKey: true,
         autoIncrement: true
     },
-    header: {
+    header_ar: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    content: {
+    content_ar: {
+     type:DataTypes.TEXT,
+     allowNull:false
+    }, 
+    header_fr: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    content_fr: {
+     type:DataTypes.TEXT,
+     allowNull:false
+    },
+      header_tr: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    content_tr: {
+     type:DataTypes.TEXT,
+     allowNull:false
+    }, 
+     header_en: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    content_en: {
      type:DataTypes.TEXT,
      allowNull:false
     }
+
 
 });
 

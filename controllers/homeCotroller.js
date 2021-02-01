@@ -95,7 +95,7 @@ const updateTopSliderImages = asyncHandler(async (req, res) => {
 const deleteTopSliderImages = asyncHandler(async(req,res,next)=> {
   try{
   let deleteRecord;
- deleteRecord = TopSliderImages.destroy({
+ deleteRecord = await TopSliderImages.destroy({
       where: {
           id: req.params.id
       }
@@ -187,7 +187,7 @@ console.log("req.body", req.body);
 const deleteBottomSliderImages = asyncHandler(async(req,res,next)=> {
 try{
 let deleteRecord;
-deleteRecord = BottomSliderImages.destroy({
+deleteRecord = await BottomSliderImages.destroy({
     where: {
         id: req.params.id
     }
@@ -270,7 +270,7 @@ const updateCountries = asyncHandler(async (req, res) => {
 const deleteCountries = asyncHandler(async(req,res,next)=> {
   try{
   let deleteRecord;
- deleteRecord = Countries.destroy({
+ deleteRecord = await Countries.destroy({
       where: {
           id: req.params.id
       }
@@ -287,7 +287,7 @@ const deleteCountries = asyncHandler(async(req,res,next)=> {
 const getBanner = asyncHandler(async(req,res,next) =>{
     let banner;
     try{
-      banner = await Banner.findAll({limit:1});
+      banner = await Banner.findAll();
     }catch(err){
      res.status(500);
      throw new Error(err);
@@ -300,8 +300,8 @@ const getBanner = asyncHandler(async(req,res,next) =>{
     console.log(banner_text)
     let createdBanner;
   let existedBanner;
-      existedBanner = Banner.findAll();
-      if(existedBanner === null){
+      existedBanner = await Banner.count();
+      if(existedBanner === 0){
     try {
         createdBanner = await Banner.create({
             banner_text
@@ -344,7 +344,7 @@ const getBanner = asyncHandler(async(req,res,next) =>{
 const deleteBanner = asyncHandler(async(req,res,next)=> {
   let deleteRecord; 
    try{  
-   deleteRecord = Banner.destroy({
+   deleteRecord = await Banner.destroy({
         where: {
             id: req.params.id
         }
@@ -359,7 +359,7 @@ const deleteBanner = asyncHandler(async(req,res,next)=> {
 const getPrivacyPolicy = asyncHandler(async (req, res, next) => {
   let privacyPolicy;
   try {
-      privacyPolicy = await Privacy_Policy.findAll({ limit: 1 });
+      privacyPolicy = await Privacy_Policy.findAll();
   } catch (err) {
       res.status(500);
       throw new Error(err)
@@ -369,25 +369,27 @@ const getPrivacyPolicy = asyncHandler(async (req, res, next) => {
 });
 
 const postPrivacyPolicy = asyncHandler(async (req, res, next) => {
-    const {header,content} = req.body;
-    console.log(header,content)
+  let createdPolicy;
+    const {header_ar,content_ar, header_fr,content_fr, header_tr,content_tr, header_en,content_en} = req.body;
+    console.log(req.body)
     let existedPolicy;
-    existedPolicy = Privacy_Policy.findAll();
-    let createdPolicy;
-    if(existedPolicy === null){
-    try {
+    existedPolicy = await Privacy_Policy.count();
+    console.log(existedPolicy )
+    if( existedPolicy === 0){
+    try {  
         createdPolicy = await Privacy_Policy.create({
-            header,
-            content
+          header_ar,content_ar, header_fr,content_fr, header_tr,content_tr, header_en,content_en
       });
     } catch (err) {
       res.status(500);
       throw new Error(err);
     }
-    }
-    else{
-      res.status(200).json({message:"not allow to create more than one"}); 
-    }
+  }//if
+  else{
+    res.status(200).json({message:"not allow to create more than one"}); 
+  }
+    
+  
     res.json(createdPolicy);
   });
   
@@ -398,8 +400,14 @@ const postPrivacyPolicy = asyncHandler(async (req, res, next) => {
        let updatePolicy;
        try{
        updatePolicy = await Privacy_Policy.update({
-          header:  req.body.header ,
-          content:  req.body.content
+        header_ar:  req.body.header_ar ,
+        content_ar:  req.body.content_ar,
+        header_fr: req.body. header_fr,
+        content_fr:  req.body.content_fr,
+        header_tr:  req.body.header_tr ,
+        content_tr:  req.body.content_tr,
+        header_en:  req.body.header_en ,
+        content_en:  req.body.content_en
         }, {
            where: {
             id : req.params.id
@@ -408,8 +416,14 @@ const postPrivacyPolicy = asyncHandler(async (req, res, next) => {
          console.log("update policy",updatePolicy)
          return res.json({
       id : updatePolicy.id,
-      header: updatePolicy.header,
-      content: updatePolicy.content
+      header_ar:  updatePolicy.header_ar ,
+      content_ar:  updatePolicy.content_ar,
+      header_fr: updatePolicy. header_fr,
+      content_fr:  updatePolicy.content_fr,
+      header_tr:  updatePolicy.header_tr ,
+      content_tr:  updatePolicy.content_tr,
+      header_en:  updatePolicy.header_en ,
+      content_en:  updatePolicy.content_en
     });
     }catch(err){
       res.status(500);
@@ -422,7 +436,7 @@ const deletePrivacyPolicy = asyncHandler(async(req,res,next)=> {
    let deleteRecord; 
      try{
   
-   deleteRecord = Privacy_Policy.destroy({
+   deleteRecord = await Privacy_Policy.destroy({
         where: {
             id: req.params.id
         }
@@ -438,7 +452,7 @@ const deletePrivacyPolicy = asyncHandler(async(req,res,next)=> {
 const getAbout = asyncHandler(async (req, res, next) => {
     let about;
     try {
-        about = await About.findAll({ limit: 1 });
+        about = await About.findAll();
     } catch (err) {
         res.status(500);
         throw new Error(err)
@@ -467,8 +481,14 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
        let updateAbout;
        try{
        updateAbout = await About.update({
-        header:  req.body.header ,
-        content:  req.body.content
+        header_ar:  req.body.header_ar ,
+        content_ar:  req.body.content_ar,
+        header_fr: req.body. header_fr,
+        content_fr:  req.body.content_fr,
+        header_tr:  req.body.header_tr ,
+        content_tr:  req.body.content_tr,
+        header_en:  req.body.header_en ,
+        content_en:  req.body.content_en
         }, {
            where: {
             id : req.params.id
@@ -477,8 +497,14 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
          console.log("update banner",updateAbout)
          return res.json({
       id : updateAbout.id,
-      header: updateAbout.header,
-      content: updateAbout.content
+      header_ar:  updateAbout.header_ar ,
+      content_ar:  updateAbout.content_ar,
+      header_fr: updateAbout. header_fr,
+      content_fr:  updateAbout.content_fr,
+      header_tr:  updateAbout.header_tr ,
+      content_tr:  updateAbout.content_tr,
+      header_en:  updateAbout.header_en ,
+      content_en:  updateAbout.content_en
     });
     }catch(err){
       res.status(500);
@@ -487,25 +513,25 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   });
 
   const postAbout = asyncHandler(async (req, res, next) => {
-    const {header,content} = req.body;
-      console.log(header,content)
+    const {header_ar,content_ar, header_fr,content_fr, header_tr,content_tr, header_en,content_en} = req.body;
+      console.log(req.body)
       let existedAbout; 
       let createdAbout;
-      existedAbout = About.findAll();
-      if(existedAbout === null){
-    try {
-        createdAbout = await About.create({
-            header,
-            content
-      });
-    } catch (err) {
-      res.status(500);
-      throw new Error(err);
-    }
+      existedAbout = await About.count();
+      console.log(existedAbout)
+     if(existedAbout === 0){
+        try {
+          createdAbout = await About.create({
+            header_ar,content_ar, header_fr,content_fr, header_tr,content_tr, header_en,content_en
+        });
+      } catch (err) {
+        res.status(500);
+        throw new Error(err);
       }
-      else{
-        res.status(200).json({message:"not allow to create more than one"}); 
-      }
+     }//if
+     else{
+      res.status(200).json({message:"not allow to create more than one"}); 
+     }
     res.json(createdAbout);
   });
 
@@ -516,8 +542,8 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   
     let createdSocialAccount;
   let existedSocialAccounts;
-  existedSocialAccounts = SocialAccounts.findAll();
-  if(existedSocialAccounts === null){
+  existedSocialAccounts = await SocialAccounts.count();
+  if(existedSocialAccounts === 0){
     try {
       createdSocialAccount = await SocialAccounts.create({
         phoneNum,
@@ -544,7 +570,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   const getSocialAccounts= asyncHandler(async (req, res, next) => {
     let socialAccount;
     try {
-      socialAccount = await SocialAccounts.findAll({ limit: 1 });
+      socialAccount = await SocialAccounts.findAll();
     } catch{
       res.status(500);
       throw new Error('something went wrong');
@@ -593,7 +619,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   const deleteSocialAccounts = asyncHandler(async(req,res,next)=> {
     try{
     let deleteRecord;
-   deleteRecord = SocialAccounts.destroy({
+   deleteRecord = await SocialAccounts.destroy({
         where: {
             id: req.params.id
         }
@@ -681,7 +707,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   const deleteCurrencies = asyncHandler(async(req,res,next)=> {
     try{
     let deleteRecord;
-   deleteRecord = Currency.destroy({
+   deleteRecord = await Currency.destroy({
         where: {
             id: req.params.id
         }
@@ -766,7 +792,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   const deleteMarkters = asyncHandler(async(req,res,next)=> {
     try{
     let deleteRecord;
-   deleteRecord = Marketer.destroy({
+   deleteRecord = await Marketer.destroy({
         where: {
             id: req.params.id
         }
@@ -925,7 +951,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   const deleteCategories = asyncHandler(async(req,res,next)=> {
     try{
     let deleteRecord;
-   deleteRecord = Category.destroy({
+   deleteRecord = await Category.destroy({
         where: {
             id: req.params.id
         }
