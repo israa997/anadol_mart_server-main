@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/databaseConnection');
 
-const Banner = sequelize.define('about', {
+const About = sequelize.define('about', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -44,4 +44,4 @@ const Banner = sequelize.define('about', {
 
 });
 
-module.exports = Banner;
+module.exports = About;
