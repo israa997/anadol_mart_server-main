@@ -56,7 +56,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/home', require('./routes/home'));
 app.use('/api/products', require('./routes/product'));
 app.use('/api/orders', require('./routes/oreder'));
- sequelize.sync({force:true}).then( // 
+ sequelize.sync().then( // {force:true}
     app.listen(process.env.PORT || 5000),
     console.log('app is working on port: 5000')
 );

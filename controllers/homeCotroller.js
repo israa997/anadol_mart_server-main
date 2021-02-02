@@ -494,7 +494,7 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
             id : req.params.id
            }
          });
-         console.log("update banner",updateAbout)
+         console.log("update About",updateAbout)
          return res.json({
       id : updateAbout.id,
       header_ar:  updateAbout.header_ar ,
