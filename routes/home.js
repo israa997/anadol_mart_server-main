@@ -69,5 +69,5 @@ router.delete('/deleteCategories/:id', HomeController.deleteCategories);
 
 router.get('/announce-email', HomeController.getAnnouncementEmails);
 router.post('/postAnnounce-email', HomeController.postAnnouncementEmails);
-
+router.delete('/deleteAnnounce-email/:id', HomeController.deleteAnnounceEmail);
 module.exports = router;

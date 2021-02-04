@@ -992,7 +992,21 @@ const updateAboutCompany = asyncHandler(async (req, res) => {
   
     res.json(createdAnnounceEmail);
   });
-
+ 
+  const  deleteAnnounceEmail = asyncHandler(async(req,res,next)=> {
+    try{
+    let deleteRecord;
+   deleteRecord = await AnnouncementEmails.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    }
+    catch(error){
+        res.status(500).json(error);
+    }
+    res.status(200).json({message:"Deleted successfully"}); 
+  });
 exports.getPrivacyPolicy = getPrivacyPolicy;
 exports.getAllTopSliderImages = getAllTopSliderImages;
 exports.getAllCountries = getAllCountries;
@@ -1039,3 +1053,4 @@ exports.updateCategories = updateCategories;
 exports.deleteCategories = deleteCategories;
 exports.getAnnouncementEmails = getAnnouncementEmails;
 exports.postAnnouncementEmails = postAnnouncementEmails;
+exports.deleteAnnounceEmail = deleteAnnounceEmail;
