@@ -296,15 +296,15 @@ const getBanner = asyncHandler(async(req,res,next) =>{
 });
 
   const postBanner = asyncHandler(async (req, res, next) => {
-    const {banner_text} = req.body;
-    console.log(banner_text)
+    const {banner_text_AR,banner_text_EN, banner_text_FR,banner_text_TR} = req.body;
+    console.log(req.body)
     let createdBanner;
   let existedBanner;
       existedBanner = await Banner.count();
       if(existedBanner === 0){
     try {
         createdBanner = await Banner.create({
-            banner_text
+          banner_text_AR,banner_text_EN, banner_text_FR,banner_text_TR
       });
     } catch (err) {
       res.status(500);
@@ -321,9 +321,11 @@ const getBanner = asyncHandler(async(req,res,next) =>{
     console.log("req.body", req.body);
        let updateBanner;
        try{
-       updateBanner = await Banner.update({
-        banner_text: req.body.banner_text 
-          
+       updateBanner = await Banner.update({ 
+        banner_text_AR: req.body.banner_text_AR,
+        banner_text_EN: req.body.banner_text_EN, 
+        banner_text_FR: req.body.banner_text_FR,
+        banner_text_TR: req.body.banner_text_TR 
         }, {
            where: {
             id : req.params.id
@@ -332,7 +334,10 @@ const getBanner = asyncHandler(async(req,res,next) =>{
          console.log("update banner",updateBanner)
          return res.json({
       id : updateBanner.id,
-      banner_text: updateBanner.banner_text
+      banner_text_AR: updateBanner.banner_text_AR,
+      banner_text_EN: updateBanner.banner_text_EN, 
+      banner_text_FR: updateBanner.banner_text_FR,
+      banner_text_TR: updateBanner.banner_text_TR 
     });
     }catch(err){
       res.status(500);
