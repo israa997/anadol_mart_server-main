@@ -19,9 +19,7 @@ const fetchAllProducts = asyncHandler(async (req, res, next) => {
                 model: ProductColorSizes
             }]
         },
-         {
-            model: Country
-            }]
+         ]
         });
     } catch (err) {
         res.status(500);
