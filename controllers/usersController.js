@@ -16,6 +16,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Order = require("../models/order");
 const OrderItem = require("../models/orderItem");
 const WishList = require("../models/wishList");
+const WishListUser = require("../models/wishListUser");
 
 const User = require("../models/users");
 const config = {
@@ -409,17 +410,20 @@ const wishlist = asyncHandler(async(req, res, next)=> {
   const user = await User.findByPk(req.user.id);
   let wishList;
   let existedWishListOfUser;
-  existedWishListOfUser = await WishList.count({
+  let wishListofUser;
+  const product = await Product.findByPk();;
+  const wishListuser = await WishListUser.findByPk();
+
+  existedWishListOfUser = await WishListUser.findOne({
     where:
     {
        userId : req.user.id
     }})
-  if(existedWishListOfUser === 0){
+  if(existedWishListOfUser){
   try {
 wishList = await WishList.create({
-
-    userId : user.id
-
+  wishlistuserId : wishListuser,
+  productId: product
 });
 
 }catch (err) {
@@ -428,9 +432,10 @@ throw new Error(err);
 }
 }
 else{
-  res.status(200).json({message:"not allow to user hsa more than a wishList"}); 
+  wishListofUser = await WishListUser.create({
+    userId : user.id
+  });
 }
-res.json(wishList);
 });
 
 const userWishList = asyncHandler(async (req, res, next) => {
@@ -440,7 +445,7 @@ const userWishList = asyncHandler(async (req, res, next) => {
     existingFavorits = await WishList.findAll({
       where:
       {
-         userId : req.user.id
+        wishlistuserId : req.params.id
       },
       include: {  model: Product}
        });
@@ -456,6 +461,21 @@ const userWishList = asyncHandler(async (req, res, next) => {
 
 })
 
+const deleteWishList = asyncHandler(async(req,res,next)=> {
+  let deleteRecord; 
+   try{  
+   deleteRecord = await WishList.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    }
+    catch(error){
+        res.status(500).json(error);
+    }
+    res.status(200).json({message:"Deleted successfully"}); 
+});
+
 
 
 
@@ -465,4 +485,5 @@ exports.getUserProfile = getUserProfile;
 exports.makePayment = makePayment;
 exports.wishlist = wishlist;
 exports.userWishList = userWishList;
+exports.deleteWishList = deleteWishList;
 exports.updateUserProfile = updateUserProfile;
