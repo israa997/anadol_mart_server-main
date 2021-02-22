@@ -12,6 +12,7 @@ app.use(cors());
 
 //import models
 const wishList = require('./models/wishList');
+const wishListUser = require('./models/wishListUser');
 const privacy_policy = require('./models/privacy_policy');
 const topsliderImage = require('./models/Topsliderimages');
 const bottomsliderImage = require('./models/BottomSliderImages');
@@ -35,8 +36,9 @@ const about = require('./models/about');
 
 // associate the models
 
-users.hasOne(wishList);
-wishList.hasMany(product);
+users.hasOne(wishListUser);
+product.hasMany(wishList);
+wishListUser.hasMany(wishList);
 users.hasMany(order);
 users.hasMany(paymentInfo);
 paymentInfo.hasMany(order);
@@ -56,7 +58,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/home', require('./routes/home'));
 app.use('/api/products', require('./routes/product'));
 app.use('/api/orders', require('./routes/oreder'));
- sequelize.sync().then( //{force:true} 
+ sequelize.sync().then( //{{force:true} force:true} 
     app.listen(process.env.PORT || 5000),
     console.log('app is working on port: 5000')
 );

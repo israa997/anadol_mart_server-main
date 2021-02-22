@@ -405,18 +405,21 @@ const makePayment = asyncHandler(async (req, res) => {
   });
 });
 
-const addToWishList = asyncHandler(async(req, res, next)=> {
+const wishlist = asyncHandler(async(req, res, next)=> {
   const user = await User.findByPk(req.user.id);
-  let createWishList;
-if(user){
+  let wishList;
+  let existedWishListOfUser;
+  existedWishListOfUser = await WishList.count({
+    where:
+    {
+       userId : req.user.id
+    }})
+  if(existedWishListOfUser === 0){
   try {
-createWishList = await WishList.create(  {
+wishList = await WishList.create({
 
-    userId : user.id,
-   include :{
-     model: Product
-   }
-  
+    userId : user.id
+
 });
 
 }catch (err) {
@@ -424,10 +427,14 @@ res.status(500);
 throw new Error(err);
 }
 }
-res.json(createWishList);
+else{
+  res.status(200).json({message:"not allow to user hsa more than a wishList"}); 
+}
+res.json(wishList);
 });
 
 const userWishList = asyncHandler(async (req, res, next) => {
+
   let existingFavorits;
   try { 
     existingFavorits = await WishList.findAll({
@@ -446,28 +453,16 @@ const userWishList = asyncHandler(async (req, res, next) => {
     throw new Error("No list yet");
   }
   return res.status(200).json(existingFavorits);
-});
 
-const deleteWishList = asyncHandler(async(req,res,next)=> {
- 
-  try{
-  let deleteRecord;
- deleteRecord = WishList.destroy({
-      where: {
-          id: req.params.id
-      }
-  })}
-  catch(error){
-      res.status(500).json(error);
-  }
-  res.status(200).json({message:"Deleted successfully"}); 
-});
+})
+
+
+
 
 exports.login = login;
 exports.signup = signup;
 exports.getUserProfile = getUserProfile;
 exports.makePayment = makePayment;
-exports.addToWishList = addToWishList;
+exports.wishlist = wishlist;
 exports.userWishList = userWishList;
-exports.deleteWishList = deleteWishList;
 exports.updateUserProfile = updateUserProfile;
