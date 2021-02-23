@@ -411,8 +411,11 @@ const wishlist = asyncHandler(async(req, res, next)=> {
   let wishList;
   let existedWishListOfUser;
   let wishListofUser;
-  const product = await Product.findByPk();;
-  const wishListuser = await WishListUser.findByPk();
+  const productid = await Product.findOne({
+    where:
+    {
+        id : req.params.id
+    }})
 
   existedWishListOfUser = await WishListUser.findOne({
     where:
@@ -422,10 +425,16 @@ const wishlist = asyncHandler(async(req, res, next)=> {
   if(existedWishListOfUser){
   try {
 wishList = await WishList.create({
-  wishlistuserId : wishListuser,
-  productId: product
-});
+  wishlistuserId: existedWishListOfUser.id,
+  productId : productid
 
+
+  //  include: [{  
+  //    model: Product,
+  //    model: WishListUser
+  // }]
+});
+console.log(existedWishListOfUser.id, productid)
 }catch (err) {
 res.status(500);
 throw new Error(err);
